@@ -15,10 +15,12 @@ class CreateNewUser implements CreatesNewUsers
     /**
      * Validate and create a newly registered user.
      *
-     * @param  array<string, string>  $input
+     * @param  array<string, string>  $input The input data containing user information.
+     * @return User The newly created user model.
      */
     public function create(array $input): User
     {
+        // Validate the input data using Laravel's Validator class.
         Validator::make($input, [
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
@@ -27,6 +29,7 @@ class CreateNewUser implements CreatesNewUsers
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
         ])->validate();
 
+        // Create a new User model and store it in the database.
         return User::create([
             'first_name' => $input['first_name'],
             'last_name' => $input['last_name'],

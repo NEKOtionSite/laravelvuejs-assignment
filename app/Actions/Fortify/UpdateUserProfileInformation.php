@@ -13,7 +13,11 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
     /**
      * Validate and update the given user's profile information.
      *
-     * @param  array<string, string>  $input
+     * @param  \App\Models\User  $user The user model whose profile information will be updated.
+     * @param  array<string, string>  $input The input data containing the updated profile information.
+     * @return void
+     *
+     * @throws \Illuminate\Validation\ValidationException If validation fails.
      */
     public function update(User $user, array $input): void
     {
@@ -24,14 +28,17 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:1024'],
         ])->validateWithBag('updateProfileInformation');
 
+        // Update the user's profile photo if provided in the input.
         if (isset($input['photo'])) {
             $user->updateProfilePhoto($input['photo']);
         }
 
+        // If the email is changed for a verified user, update email_verified_at and send verification email.
         if ($input['email'] !== $user->email &&
             $user instanceof MustVerifyEmail) {
             $this->updateVerifiedUser($user, $input);
         } else {
+            // Update the user's profile information (first name, last name, email).
             $user->forceFill([
                 'first_name' => $input['first_name'],
                 'last_name' => $input['last_name'],
@@ -43,10 +50,13 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
     /**
      * Update the given verified user's profile information.
      *
-     * @param  array<string, string>  $input
+     * @param  \App\Models\User  $user The verified user model whose profile information will be updated.
+     * @param  array<string, string>  $input The input data containing the updated profile information.
+     * @return void
      */
     protected function updateVerifiedUser(User $user, array $input): void
     {
+        // Update the verified user's profile information (first name, last name, email).
         $user->forceFill([
             'first_name' => $input['first_name'],
             'last_name' => $input['last_name'],
@@ -54,6 +64,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             'email_verified_at' => null,
         ])->save();
 
+        // Send an email verification notification to the user.
         $user->sendEmailVerificationNotification();
     }
 }

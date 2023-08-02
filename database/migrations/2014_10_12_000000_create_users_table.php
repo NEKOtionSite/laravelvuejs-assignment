@@ -4,10 +4,19 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+/**
+ * The CreateUserTable migration.
+ *
+ * This migration creates the 'users' table in the database to store user information.
+ * It adds columns for first name, last name, email, password, remember token, email verification timestamp,
+ * current team ID (nullable), profile photo path (nullable), and timestamps (created_at and updated_at).
+ */
 return new class extends Migration
 {
     /**
      * Run the migrations.
+     *
+     * @return void
      */
     public function up(): void
     {

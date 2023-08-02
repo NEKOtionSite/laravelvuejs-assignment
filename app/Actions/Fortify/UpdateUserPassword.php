@@ -14,7 +14,11 @@ class UpdateUserPassword implements UpdatesUserPasswords
     /**
      * Validate and update the user's password.
      *
-     * @param  array<string, string>  $input
+     * @param  \App\Models\User  $user The user model whose password will be updated.
+     * @param  array<string, string>  $input The input data containing the new and current password.
+     * @return void
+     *
+     * @throws \Illuminate\Validation\ValidationException If validation fails.
      */
     public function update(User $user, array $input): void
     {
@@ -25,6 +29,7 @@ class UpdateUserPassword implements UpdatesUserPasswords
             'current_password.current_password' => __('The provided password does not match your current password.'),
         ])->validateWithBag('updatePassword');
 
+        // Set the new password for the user and save it to the database.
         $user->forceFill([
             'password' => Hash::make($input['password']),
         ])->save();

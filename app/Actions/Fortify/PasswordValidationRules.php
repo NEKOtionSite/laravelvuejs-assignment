@@ -13,6 +13,11 @@ trait PasswordValidationRules
      */
     protected function passwordRules(): array
     {
+        // Password validation rules:
+        // - The password is required.
+        // - The password must be a string.
+        // - The password must pass Laravel Fortify's Password rule (minimum length, uppercase, lowercase, etc.).
+        // - The password must be confirmed (a 'password_confirmation' field must match the 'password' field).
         return ['required', 'string', new Password, 'confirmed'];
     }
 }

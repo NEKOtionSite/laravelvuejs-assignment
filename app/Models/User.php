@@ -10,6 +10,13 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 
+/**
+ * The User model represents a user entity in the application.
+ *
+ * This model extends the Laravel Eloquent `Authenticatable` class, which provides authentication features.
+ * It uses various traits, including `HasApiTokens`, `HasFactory`, `HasProfilePhoto`, `Notifiable`, and `TwoFactorAuthenticatable`.
+ * The model is used for managing user records in the database.
+ */
 class User extends Authenticatable
 {
     use HasApiTokens;
